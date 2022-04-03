@@ -32,6 +32,7 @@ def sms_greeting():
     ind = body.rfind("top")
     if(ind != -1): 
         genre = body[ind + 4:len(body)]
+        genre = genre.replace(' ', '-')
         toplist = scrape2(genre)
         resp.message("1. " + toplist[0] + "\n2. " + toplist[1] + "\n3. " + toplist[2])
         return str(resp)
@@ -63,6 +64,7 @@ def sms_greeting():
         resp.message(sms_reply(body))
     return str(resp)
 
+# checking the text for game name to scrape for
 def sms_reply(game_message):
     """Send a dynamic reply to an incoming text message"""
     # Get the message the user sent our Twilio number    
@@ -87,10 +89,8 @@ def sms_reply(game_message):
     # Determine the right reply for this message
     return stra
 
+# scrapes deal website and finds the best deal
 def scraping(game_name):
-
-    #s = Service(r'C:/Users/cool4/Downloads/chromedriver_win32')
-    #driver = webdriver.Chrome(executable_path=r'C:/Users/cool4/Downloads/chromedriver_win32/chromedriver.exe')
     s = Service('/usr/local/bin/chromedriver')
     driver = webdriver.Chrome(service=s)
 
@@ -118,13 +118,10 @@ def scraping(game_name):
 
     pagesource = driver.page_source
 
-    #page = requests.get('https://isthereanydeal.com') # Getting page HTML through request
     soup = BeautifulSoup(pagesource, 'lxml') # Parsing content using beautifulsoup
-    #a = soup.select("a[href^=?game_name]")
-    #ssprint(a)
     price = soup.find('a', {'data-evt' : '["shop","click","%s"]'%(game_name)})
     if (price == None):
-        return
+        return("I cannot find tis : (", "anywhere, have you checked 6 feet under? ", "it's where i found your grades")
     
     try: 
         rest = price.find_all_next('a', {'data-evt' : '["shop","click","%s"]'%(game_name)})
@@ -137,6 +134,7 @@ def scraping(game_name):
         link = rest['href']
         return(rest.text, place , link)
 
+# parse through top games of the genre on metacritic and lists the top 3
 def scrape2(genre):
     s = Service('/usr/local/bin/chromedriver')
     driver = webdriver.Chrome(service=s)
@@ -144,12 +142,6 @@ def scrape2(genre):
     driver.get('https://www.metacritic.com/browse/games/genre/metascore/%s/all?view=detailed'%genre)
     time.sleep(2) 
     SCROLL_PAUSE_TIME = 0.4
-
-
-    # print('https://www.metacritic.com/browse/games/genre/metascore/%s/all?view=detailed'%genre)
-    # page = requests.get('https://www.metacritic.com/browse/games/genre/metascore/%s/all?view=detailed'%genre)
-    # print('https://www.metacritic.com/browse/games/genre/metascore/%s/all?view=detailed'%genre)
-    # soup = BeautifulSoup(page.content, 'html.parser')
         
     pagesource = driver.page_source
     soup = BeautifulSoup(pagesource, 'lxml')
