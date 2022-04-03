@@ -26,7 +26,40 @@ def sms_greeting():
         meme = body[ind + 3:len(body)]
         resp.message("Hi " + meme + ", I'm dad")
         return str(resp)
-    else:
+    body = body.strip()
+
+    #genre search 
+    ind = body.rfind("top")
+    if(ind != -1): 
+        genre = body[ind + 4:len(body)]
+        toplist = scrape2(genre)
+        resp.message("1. " + toplist[0] + "\n2. " + toplist[1] + "\n3. " + toplist[2])
+        return str(resp)
+        
+    #memes    
+    if (body == "hi"):
+        resp.message("Hello my name is Noobie! Are you lonely AND broke[n]? Play sum gamez then! : ) Please message me with the name of a PC game to get the lowest prices or a genre (enter \"Help Genre\" for the list of genres) to get the top 3 rated games for the specified genre.")
+        return str(resp)
+    elif (body == "help genre"):
+        resp.message("TO SELECT: write \"top 'genre'\"\naction\nadventure\nfighting\nfirst person\nflight\nparty\nplatformer\npuzzle\nracing\nreal time\nrole playing\nsimulation\nsports\nstrategy\nthird person\nturn based\nwar game\nwrestling")
+        return str(resp)
+    elif (body == 'about'):
+        resp.message("This bot was made during Spring 2022 HackRU by Connie Chen, Henry Lin, Brian Wang, and our fallen soldier Andy Li.")
+        return str(resp)
+    elif (body == 'can u be my friend'):
+        stoopid = "Sure, visit me here: shorturl.at/hzIT2"
+        resp.message(stoopid)
+        return str(resp)
+    elif (body == 'f'):
+        resp.message("FFFFFFFFFF\nF\nF\nF\nFFFFFFF\nF\nF\nF\nF")
+        return str(resp)
+    elif (body == 'hi dad'):
+        resp.message("Are ya winning son?")
+        return str(resp)
+    elif (body == 'yes'):
+        resp.message("I'm proud of you my very biological son.")
+        return str(resp)
+    else: 
         resp.message(sms_reply(body))
     return str(resp)
 
@@ -49,7 +82,7 @@ def sms_reply(game_message):
     # Start our TwiML response
     #resp = MessagingResponse()
     price, location, link = scraping(body)
-    scrape2("adventure")
+    #lister = scrape2("adventure")
     wordy = " on sale for: "
     stra = title + wordy + price + " at: " + location + " " + link 
     # Determine the right reply for this message
