@@ -80,14 +80,11 @@ def sms_reply(game_message):
     body = bod.lower()
 
     # Start our TwiML response
-    #resp = MessagingResponse()
     price, location, link = scraping(body)
-    #lister = scrape2("adventure")
     wordy = " on sale for: "
     stra = title + wordy + price + " at: " + location + " " + link 
+
     # Determine the right reply for this message
-    #resp.message(stra)
-    #return str(resp)
     return stra
 
 def scraping(game_name):
